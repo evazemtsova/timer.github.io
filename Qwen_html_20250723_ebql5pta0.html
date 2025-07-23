@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Таймер до 1 марта 2026</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            margin: 0;
+            padding-top: 50px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        #timer {
+            font-size: 2.2em;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            margin: 20px auto;
+            display: inline-block;
+        }
+        .time-unit {
+            display: inline-block;
+            margin: 0 10px;
+            min-width: 120px;
+        }
+        .number {
+            font-size: 2.5em;
+            font-weight: bold;
+            display: block;
+        }
+        .label {
+            font-size: 0.8em;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        @media (max-width: 768px) {
+            .time-unit {
+                margin: 5px;
+                min-width: 80px;
+            }
+            .number {
+                font-size: 1.8em;
+            }
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>До 1 марта 2026 года осталось:</h1>
+        <div id="timer">
+            <div class="time-unit">
+                <span class="number" id="months">00</span>
+                <span class="label">месяцев</span>
+            </div>
+            <div class="time-unit">
+                <span class="number" id="days">00</span>
+                <span class="label">дней</span>
+            </div>
+            <div class="time-unit">
+                <span class="number" id="hours">00</span>
+                <span class="label">часов</span>
+            </div>
+            <div class="time-unit">
+                <span class="number" id="minutes">00</span>
+                <span class="label">минут</span>
+            </div>
+            <div class="time-unit">
+                <span class="number" id="seconds">00</span>
+                <span class="label">секунд</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateTimer() {
+            const targetDate = new Date('2026-03-01T00:00:00');
+            const currentDate = new Date();
+            
+            let diffTime = targetDate - currentDate;
+            
+            if (diffTime <= 0) {
+                document.getElementById('months').textContent = '00';
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                return;
+            }
+            
+            // Вычисляем месяцы
+            let months = 0;
+            let tempDate = new Date(currentDate);
+            
+            while (tempDate < targetDate) {
+                tempDate.setMonth(tempDate.getMonth() + 1);
+                if (tempDate <= targetDate) {
+                    months++;
+                } else {
+                    tempDate.setMonth(tempDate.getMonth() - 1);
+                    break;
+                }
+            }
+            
+            // Оставшееся время после вычитания месяцев
+            const remainingTime = targetDate - tempDate;
+            const diffDays = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+            const diffHours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const diffMinutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+            const diffSeconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+            
+            // Обновляем элементы на странице
+            document.getElementById('months').textContent = String(months).padStart(2, '0');
+            document.getElementById('days').textContent = String(diffDays).padStart(2, '0');
+            document.getElementById('hours').textContent = String(diffHours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(diffMinutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(diffSeconds).padStart(2, '0');
+        }
+
+        // Обновляем таймер сразу и затем каждую секунду
+        updateTimer();
+        setInterval(updateTimer, 1000);
+    </script>
+</body>
+</html>
